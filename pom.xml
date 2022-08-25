@@ -6,7 +6,7 @@
     <artifactId>gulimall</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>gulimall</name>
-    <description>谷粒商城-聚合服务</description>
+    <description>聚合服务</description>
     <packaging>pom</packaging>
 
     <modules>
@@ -15,6 +15,8 @@
         <module>gulimall-order</module>
         <module>gulimall-product</module>
         <module>gulimall-ware</module>
+        <module>renren-fast</module>
+        <module>renren-generator</module>
     </modules>
 
 </project>
