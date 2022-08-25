@@ -1,16 +1,16 @@
 package com.rkyang.gulimall.coupon.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.rkyang.gulimall.coupon.entity.CouponEntity;
-import com.rkyang.gulimall.coupon.service.CouponService;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
+import com.rkyang.gulimall.coupon.entity.CouponEntity;
+import com.rkyang.gulimall.coupon.service.CouponService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -21,11 +21,22 @@ import com.rkyang.common.utils.R;
  * @email rkyang@outlook.com
  * @date 2022-08-25 10:14:12
  */
+@RefreshScope
 @RestController
 @RequestMapping("coupon/coupon")
 public class CouponController {
     @Autowired
     private CouponService couponService;
+
+    @Value("${coupon.user.name}")
+    private String name;
+    @Value("${coupon.user.age}")
+    private Integer age;
+
+    @GetMapping("/testConfigCenter")
+    public R testConfigCenter() {
+        return R.ok().put("name", name).put("age", age);
+    }
 
     @GetMapping("/member/list")
     public R memberCoupon() {
