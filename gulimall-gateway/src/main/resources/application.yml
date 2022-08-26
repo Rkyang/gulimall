@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: Bing
+        uri: https://bing.com
+        predicates:
+        - Query=uri, bing
+      - id: rkyang
+        uri: http://rkyang.cn
+        predicates:
+        - Query=uri, rky
+    nacos:
+        server-addr: 127.0.0.1:8848
+  application:
+    name: gulimall-gateway
+server:
+  port: 88
