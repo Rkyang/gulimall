@@ -2,6 +2,7 @@ spring:
   cloud:
     gateway:
       routes:
+#      测试
       - id: Bing
         uri: https://bing.com
         predicates:
@@ -9,13 +10,25 @@ spring:
       - id: rkyang
         uri: http://rkyang.cn
         predicates:
-        - Query=uri, rky
+        - Query=uri, rky\
+
+#      商品服务网关
+      - id: product_route
+        uri: lb://gulimall-product
+        predicates:
+          - Path=/api/product/**
+        filters:
+          - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+#      主系统网关，默认请求renren-fast
       - id: admin_route
 #        lb:表示负载均衡
         uri: lb://renren-fast
         predicates:
+#          匹配地址
           - Path=/api/**
         filters:
+#          重写请求地址
           - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
     nacos:
         server-addr: 127.0.0.1:8848
