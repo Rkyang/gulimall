@@ -7,11 +7,6 @@ spring:
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
-    alicloud:
-      access-key: LTAI5tC59PNSjawqffAb96bx
-      secret-key: jN4is0pg7RIcbDF6d8yHVErUVEIyoX
-      oss:
-        endpoint: oss-cn-beijing.aliyuncs.com
   application:
     name: gulimall-product
 
