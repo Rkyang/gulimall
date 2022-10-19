@@ -20,6 +20,14 @@ spring:
         filters:
           - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+#       第三方服务网关
+      - id: third_party_route
+        uri: lb://gulimall-third-party
+        predicates:
+          - Path=/api/third-party/**
+        filters:
+          - RewritePath=/api/third-party/(?<segment>.*),/$\{segment}
+
 #      主系统网关，默认请求renren-fast
       - id: admin_route
 #        lb:表示负载均衡
