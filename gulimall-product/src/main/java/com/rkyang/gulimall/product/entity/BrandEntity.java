@@ -46,14 +46,15 @@ public class BrandEntity implements Serializable {
 	 */
 	@TableLogic(value = "1", delval = "0")
 	@NotNull(message = "显示状态参数不能为空")
-	@Min(value = 0, message = "显示状态参数格式错误")
-	@Max(value = 1, message = "显示状态参数格式错误")
+	@Pattern(regexp = "^[0,1]$", message = "显示状态参数格式错误")
+//	@Min(value = 0, message = "显示状态参数格式错误")
+//	@Max(value = 1, message = "显示状态参数格式错误")
 	private Integer showStatus;
 	/**
 	 * 检索首字母
 	 */
 	@NotBlank(message = "检索首字母参数不能为空")
-	@Pattern(regexp = "/^[a-zA-Z]$/", message = "检索首字母参数格式错误")
+	@Pattern(regexp = "^[a-zA-Z]$", message = "检索首字母参数格式错误")
 	private String firstLetter;
 	/**
 	 * 排序
