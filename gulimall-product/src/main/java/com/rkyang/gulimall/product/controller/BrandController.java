@@ -1,20 +1,19 @@
 package com.rkyang.gulimall.product.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.rkyang.gulimall.product.entity.BrandEntity;
-import com.rkyang.gulimall.product.service.BrandService;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
+import com.rkyang.gulimall.product.entity.BrandEntity;
+import com.rkyang.gulimall.product.service.BrandService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -58,8 +57,16 @@ public class BrandController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:brand:save")
-    public R save(@RequestBody BrandEntity brand){
-		brandService.save(brand);
+    public R save(@Valid @RequestBody BrandEntity brand, BindingResult result){
+        if (result.hasErrors()) {
+            List<String> resultMsg = new ArrayList<>();
+            for (FieldError fieldError : result.getFieldErrors()) {
+                resultMsg.add(fieldError.getDefaultMessage());
+            }
+            return R.error(400, "参数不符合规范").put("data", resultMsg);
+        } else {
+		    brandService.save(brand);
+        }
 
         return R.ok();
     }

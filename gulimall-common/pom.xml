@@ -15,6 +15,11 @@
     <description>公共服务</description>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>2.7.3</version>
+        </dependency>
         <!--mybatis-plus-->
         <dependency>
             <groupId>com.baomidou</groupId>
