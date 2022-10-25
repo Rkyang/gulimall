@@ -21,3 +21,6 @@ mybatis-plus:
       logic-not-delete-value: 0
 server:
   port: 8084
+logging:
+  level:
+    com.rkyang.gulimall: debug
