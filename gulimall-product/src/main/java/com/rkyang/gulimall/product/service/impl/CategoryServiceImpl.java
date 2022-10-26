@@ -10,6 +10,8 @@ import com.rkyang.gulimall.product.entity.CategoryEntity;
 import com.rkyang.gulimall.product.service.CategoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,5 +60,22 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 .sorted((category1, category2) -> (category1.getSort() == null ? 0 : category1.getSort()) - (category2 == null ? 0 : category2.getSort()))
                 // 生成新的集合
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Long[] findFullPath(Long catelogId) {
+        CategoryEntity category = this.getById(catelogId);
+        List<Long> fullPath = getAllParent(category, new ArrayList<>());
+        Collections.reverse(fullPath);
+        return fullPath.toArray(new Long[fullPath.size()]);
+    }
+
+    private List<Long> getAllParent(CategoryEntity category, List<Long> path) {
+        path.add(category.getCatId());
+        if (category.getParentCid() != 0) {
+            CategoryEntity parent = this.getById(category.getParentCid());
+            this.getAllParent(parent, path);
+        }
+        return path;
     }
 }

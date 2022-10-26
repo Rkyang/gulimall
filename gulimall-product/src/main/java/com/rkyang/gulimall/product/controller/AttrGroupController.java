@@ -4,6 +4,7 @@ import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
 import com.rkyang.gulimall.product.entity.AttrGroupEntity;
 import com.rkyang.gulimall.product.service.AttrGroupService;
+import com.rkyang.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,9 @@ public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     /**
      * 列表
      */
@@ -45,6 +49,9 @@ public class AttrGroupController {
     //@RequiresPermissions("product:attrgroup:info")
     public R info(@PathVariable("attrGroupId") Long attrGroupId){
 		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+		// 获取分组属性的分类完整路径（所有父级的分类id）
+        Long[] catelogIds = categoryService.findFullPath(attrGroup.getCatelogId());
+        attrGroup.setCatelogIds(catelogIds);
 
         return R.ok().put("attrGroup", attrGroup);
     }
