@@ -5,10 +5,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.Query;
+import com.rkyang.gulimall.product.dao.CategoryBrandRelationDao;
 import com.rkyang.gulimall.product.dao.CategoryDao;
+import com.rkyang.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.rkyang.gulimall.product.entity.CategoryEntity;
 import com.rkyang.gulimall.product.service.CategoryService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +24,9 @@ import java.util.stream.Collectors;
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    private CategoryBrandRelationDao categoryBrandRelationDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -70,6 +78,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return fullPath.toArray(new Long[fullPath.size()]);
     }
 
+    /**
+     * 递归查询分类的所有上级id
+     */
     private List<Long> getAllParent(CategoryEntity category, List<Long> path) {
         path.add(category.getCatId());
         if (category.getParentCid() != 0) {
@@ -77,5 +88,19 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             this.getAllParent(parent, path);
         }
         return path;
+    }
+
+    /**
+     * 修改分类信息，并修改相关的表中冗余的分类名称
+     */
+    @Override
+    @Transactional
+    public void updateAndRelation(CategoryEntity category) {
+        updateById(category);
+        if (StringUtils.isNotBlank(category.getName())) {
+            CategoryBrandRelationEntity entity = new CategoryBrandRelationEntity();
+            entity.setCatelogName(category.getName());
+            categoryBrandRelationDao.update(entity, new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", category.getCatId()));
+        }
     }
 }
