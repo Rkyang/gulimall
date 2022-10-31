@@ -20,5 +20,7 @@ public interface AttrService extends IService<AttrEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     R saveAttr(AttrVO attr);
+
+    PageUtils queryPage(Map<String, Object> params, Long catId);
 }
 
