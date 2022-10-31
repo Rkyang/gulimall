@@ -33,7 +33,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         if (cateId != 0) {
             wrapper.eq("catelog_id", cateId);
         }
-        if (StringUtils.isNotBlank(params.get("key").toString())) {
+        if (params.get("key") != null && StringUtils.isNotBlank(params.get("key").toString())) {
             wrapper.and((obj) -> obj.eq("attr_group_id", params.get("key")).or().like("attr_group_name", params.get("key")));
         }
         IPage<AttrGroupEntity> page = this.page(new Query<AttrGroupEntity>().getPage(params), wrapper);

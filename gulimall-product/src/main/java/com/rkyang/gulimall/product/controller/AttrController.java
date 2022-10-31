@@ -1,19 +1,15 @@
 package com.rkyang.gulimall.product.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.rkyang.gulimall.product.entity.AttrEntity;
-import com.rkyang.gulimall.product.service.AttrService;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
+import com.rkyang.gulimall.product.entity.AttrEntity;
+import com.rkyang.gulimall.product.service.AttrService;
+import com.rkyang.gulimall.product.vo.AttrVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -58,10 +54,9 @@ public class AttrController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:attr:save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
-
-        return R.ok();
+    public R save(@RequestBody AttrVO attr){
+//		attrService.save(attr);
+		return attrService.saveAttr(attr);
     }
 
     /**

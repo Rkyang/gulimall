@@ -2,7 +2,9 @@ package com.rkyang.gulimall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rkyang.common.utils.PageUtils;
+import com.rkyang.common.utils.R;
 import com.rkyang.gulimall.product.entity.AttrEntity;
+import com.rkyang.gulimall.product.vo.AttrVO;
 
 import java.util.Map;
 
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface AttrService extends IService<AttrEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    R saveAttr(AttrVO attr);
 }
 
