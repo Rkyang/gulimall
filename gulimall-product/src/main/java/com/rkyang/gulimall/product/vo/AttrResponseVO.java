@@ -1,6 +1,5 @@
 package com.rkyang.gulimall.product.vo;
 
-import com.rkyang.gulimall.product.entity.AttrEntity;
 import lombok.Data;
 
 /**
@@ -8,8 +7,10 @@ import lombok.Data;
  * @date 2022/10/31
  */
 @Data
-public class AttrResponseVO extends AttrEntity {
+public class AttrResponseVO extends AttrVO {
 
     private String groupName;
     private String catelogName;
+
+    private Long[] catelogPath;
 }

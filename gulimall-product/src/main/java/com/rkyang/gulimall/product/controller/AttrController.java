@@ -2,8 +2,8 @@ package com.rkyang.gulimall.product.controller;
 
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
-import com.rkyang.gulimall.product.entity.AttrEntity;
 import com.rkyang.gulimall.product.service.AttrService;
+import com.rkyang.gulimall.product.vo.AttrResponseVO;
 import com.rkyang.gulimall.product.vo.AttrVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +54,8 @@ public class AttrController {
     @RequestMapping("/info/{attrId}")
     //@RequiresPermissions("product:attr:info")
     public R info(@PathVariable("attrId") Long attrId){
-		AttrEntity attr = attrService.getById(attrId);
+//		AttrEntity attr = attrService.getById(attrId);
+		AttrResponseVO attr = attrService.getAttrInfo(attrId);
 
         return R.ok().put("attr", attr);
     }
@@ -74,7 +75,7 @@ public class AttrController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:attr:update")
-    public R update(@RequestBody AttrEntity attr){
+    public R update(@RequestBody AttrVO attr){
 		attrService.updateById(attr);
 
         return R.ok();
@@ -87,6 +88,7 @@ public class AttrController {
     //@RequiresPermissions("product:attr:delete")
     public R delete(@RequestBody Long[] attrIds){
 		attrService.removeByIds(Arrays.asList(attrIds));
+		// TODO 删除关联关系表数据
 
         return R.ok();
     }

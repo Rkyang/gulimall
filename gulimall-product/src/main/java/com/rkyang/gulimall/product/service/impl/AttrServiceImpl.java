@@ -15,6 +15,7 @@ import com.rkyang.gulimall.product.entity.AttrEntity;
 import com.rkyang.gulimall.product.entity.AttrGroupEntity;
 import com.rkyang.gulimall.product.entity.CategoryEntity;
 import com.rkyang.gulimall.product.service.AttrService;
+import com.rkyang.gulimall.product.service.CategoryService;
 import com.rkyang.gulimall.product.vo.AttrResponseVO;
 import com.rkyang.gulimall.product.vo.AttrVO;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +40,9 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
     @Autowired
     private CategoryDao categoryDao;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -76,11 +80,11 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
                 AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(attrgroupRelationEntity.getAttrGroupId());
                 if (attrGroupEntity != null) {
                     attrResponseVO.setGroupName(attrGroupEntity.getAttrGroupName());
-                    CategoryEntity category = categoryDao.selectById(attrGroupEntity.getCatelogId());
-                    if (category != null) {
-                        attrResponseVO.setCatelogName(category.getName());
-                    }
                 }
+            }
+            CategoryEntity category = categoryDao.selectById(o.getCatelogId());
+            if (category != null) {
+                attrResponseVO.setCatelogName(category.getName());
             }
             return attrResponseVO;
         }).collect(Collectors.toList());
@@ -101,5 +105,44 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         attrgroupRelationEntity.setAttrId(attrEntity.getAttrId());
         attrgroupRelationDao.insert(attrgroupRelationEntity);
         return R.ok();
+    }
+
+    @Override
+    public AttrResponseVO getAttrInfo(Long attrId) {
+        AttrResponseVO vo = new AttrResponseVO();
+        // 查询attr信息
+        AttrEntity attrEntity = this.getById(attrId);
+        BeanUtils.copyProperties(attrEntity, vo);
+        // 查询分组和分类信息
+        AttrAttrgroupRelationEntity attrgroupRelation = attrgroupRelationDao.selectOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrEntity.getAttrId()));
+        if (attrgroupRelation != null) {
+            vo.setAttrGroupId(attrgroupRelation.getAttrGroupId());
+        }
+        Long[] fullPath = categoryService.findFullPath(attrEntity.getCatelogId());
+        if (fullPath != null) {
+            vo.setCatelogPath(fullPath);
+        }
+        return vo;
+    }
+
+    @Override
+    @Transactional
+    public void updateById(AttrVO attr) {
+        AttrEntity entity = new AttrEntity();
+        BeanUtils.copyProperties(attr, entity);
+        this.updateById(entity);
+        // 修改或新增分类分组关联关系
+        AttrAttrgroupRelationEntity attrgroupRelation = attrgroupRelationDao.selectOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attr.getAttrId()));
+        if (attrgroupRelation != null) {
+            // 修改
+            attrgroupRelation.setAttrGroupId(attr.getAttrGroupId());
+            attrgroupRelationDao.updateById(attrgroupRelation);
+        } else {
+            //新增
+            AttrAttrgroupRelationEntity attrgroupRelationEntity = new AttrAttrgroupRelationEntity();
+            attrgroupRelationEntity.setAttrGroupId(attr.getAttrGroupId());
+            attrgroupRelationEntity.setAttrId(entity.getAttrId());
+            attrgroupRelationDao.insert(attrgroupRelationEntity);
+        }
     }
 }
