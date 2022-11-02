@@ -22,7 +22,7 @@ public interface AttrService extends IService<AttrEntity> {
 
     R saveAttr(AttrVO attr);
 
-    PageUtils queryPage(Map<String, Object> params, Long catId);
+    PageUtils queryPage(Map<String, Object> params, Long catId, Integer code);
 
     AttrResponseVO getAttrInfo(Long attrId);
 
