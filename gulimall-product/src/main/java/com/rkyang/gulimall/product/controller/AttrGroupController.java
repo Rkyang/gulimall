@@ -2,13 +2,16 @@ package com.rkyang.gulimall.product.controller;
 
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
+import com.rkyang.gulimall.product.entity.AttrEntity;
 import com.rkyang.gulimall.product.entity.AttrGroupEntity;
 import com.rkyang.gulimall.product.service.AttrGroupService;
 import com.rkyang.gulimall.product.service.CategoryService;
+import com.rkyang.gulimall.product.vo.AttrVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -57,6 +60,17 @@ public class AttrGroupController {
     }
 
     /**
+     * 获取属性分组关联的规格参数
+     */
+    @GetMapping("{attrGroupId}/attr/relation")
+    public R getAttrRelation(@PathVariable("attrGroupId") Long attrGroupId) {
+
+        List<AttrEntity> result = attrGroupService.getAttrRelation(attrGroupId);
+
+        return R.ok().put("data", result);
+    }
+
+    /**
      * 保存
      */
     @RequestMapping("/save")
@@ -89,4 +103,14 @@ public class AttrGroupController {
         return R.ok();
     }
 
+    /**
+     * 属性分组和规格参数的关联批量删除
+     */
+    @PostMapping("/attr/relation/delete")
+    public R deleteRelation(@RequestBody AttrVO[] attrVOS) {
+
+        attrGroupService.deleteRelation(attrVOS);
+
+        return R.ok();
+    }
 }

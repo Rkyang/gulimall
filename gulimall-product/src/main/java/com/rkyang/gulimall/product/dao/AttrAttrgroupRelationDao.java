@@ -1,8 +1,12 @@
 package com.rkyang.gulimall.product.dao;
 
-import com.rkyang.gulimall.product.entity.AttrAttrgroupRelationEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.rkyang.gulimall.product.entity.AttrAttrgroupRelationEntity;
+import com.rkyang.gulimall.product.vo.AttrVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 属性&属性分组关联
@@ -13,5 +17,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface AttrAttrgroupRelationDao extends BaseMapper<AttrAttrgroupRelationEntity> {
-	
+
+    void deleteRelation(@Param("records") List<AttrVO> asList);
 }
