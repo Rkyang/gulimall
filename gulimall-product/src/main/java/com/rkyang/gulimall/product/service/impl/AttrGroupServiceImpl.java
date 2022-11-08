@@ -3,6 +3,7 @@ package com.rkyang.gulimall.product.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rkyang.common.constant.product.AttrEnum;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.Query;
 import com.rkyang.gulimall.product.dao.AttrAttrgroupRelationDao;
@@ -67,6 +68,35 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         }
 
         return null;
+    }
+
+    @Override
+    public PageUtils getAttrNoRelation(Map<String, Object> params, Long attrGroupId) {
+        // 获取分组的分类id
+        AttrGroupEntity attrGroupEntity = this.baseMapper.selectById(attrGroupId);
+        Long catelogId = attrGroupEntity.getCatelogId();
+        // 获取分类下的所有分组id
+        List<AttrGroupEntity> attrGroupEntities = this.baseMapper.selectList(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelogId));
+        List<Long> attrGroupIdS = attrGroupEntities.stream().map(AttrGroupEntity::getAttrGroupId).collect(Collectors.toList());
+        // 获取分组关联的所有规格参数的attrID
+        List<AttrAttrgroupRelationEntity> relationEntities = attrgroupRelationDao.selectList(new QueryWrapper<AttrAttrgroupRelationEntity>().in("attr_group_id", attrGroupIdS));
+        List<Long> attrIdS = relationEntities.stream().map(AttrAttrgroupRelationEntity::getAttrId).collect(Collectors.toList());
+        // 获取未被关联的规格参数
+        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<AttrEntity>().
+                eq("catelog_id", catelogId).
+                eq("attr_type", AttrEnum.ATTR_TYPE_BASE.getCode());
+        if (!CollectionUtils.isEmpty(attrIdS)) {
+            wrapper.notIn("attr_id", attrIdS);
+        }
+        // 封装检索条件
+        Object key = params.get("key");
+        if (key != null) {
+            wrapper.and(o -> o.eq("attr_id", key).or().like("attr_name", key));
+        }
+
+        IPage<AttrEntity> page = attrDao.selectPage(new Query<AttrEntity>().getPage(params), wrapper);
+
+        return new PageUtils(page);
     }
 
     @Override
