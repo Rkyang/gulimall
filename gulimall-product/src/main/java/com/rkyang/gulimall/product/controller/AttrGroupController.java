@@ -2,8 +2,10 @@ package com.rkyang.gulimall.product.controller;
 
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
+import com.rkyang.gulimall.product.entity.AttrAttrgroupRelationEntity;
 import com.rkyang.gulimall.product.entity.AttrEntity;
 import com.rkyang.gulimall.product.entity.AttrGroupEntity;
+import com.rkyang.gulimall.product.service.AttrAttrgroupRelationService;
 import com.rkyang.gulimall.product.service.AttrGroupService;
 import com.rkyang.gulimall.product.service.CategoryService;
 import com.rkyang.gulimall.product.vo.AttrVO;
@@ -31,6 +33,9 @@ public class AttrGroupController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private AttrAttrgroupRelationService attrgroupRelationService;
 
     /**
      * 列表
@@ -80,6 +85,15 @@ public class AttrGroupController {
         PageUtils page = attrGroupService.getAttrNoRelation(params, attrGroupId);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 属性分组关联规格参数保存
+     */
+    @PostMapping("/attr/relation")
+    public R addAttrRelation(@RequestBody List<AttrAttrgroupRelationEntity> entities) {
+        attrgroupRelationService.saveBatch(entities);
+        return R.ok();
     }
 
     /**
