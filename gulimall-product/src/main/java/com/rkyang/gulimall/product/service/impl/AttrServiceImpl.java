@@ -61,7 +61,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         queryWrapper.eq("attr_type", code);
 
         if (catId != 0) {
-            queryWrapper.eq("attr_id", catId);
+            queryWrapper.eq("catelog_id", catId);
         }
         Object key = params.get("key");
         if (key != null && StringUtils.isNotBlank(key.toString())) {

@@ -3,6 +3,7 @@ package com.rkyang.gulimall.product.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
+import com.rkyang.gulimall.product.entity.BrandEntity;
 import com.rkyang.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.rkyang.gulimall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,15 @@ public class CategoryBrandRelationController {
         PageUtils page = categoryBrandRelationService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 查询分类关联的品牌
+     */
+    @GetMapping("/brands/list")
+    public R relationBrandList(@RequestParam(value = "catId") long catId) {
+        List<BrandEntity> brandEntities = categoryBrandRelationService.getBrandsByCatId(catId);
+        return R.ok().put("data", brandEntities);
     }
 
     /**

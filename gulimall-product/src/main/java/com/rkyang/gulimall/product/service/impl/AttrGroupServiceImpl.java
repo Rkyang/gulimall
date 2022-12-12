@@ -13,8 +13,11 @@ import com.rkyang.gulimall.product.entity.AttrAttrgroupRelationEntity;
 import com.rkyang.gulimall.product.entity.AttrEntity;
 import com.rkyang.gulimall.product.entity.AttrGroupEntity;
 import com.rkyang.gulimall.product.service.AttrGroupService;
+import com.rkyang.gulimall.product.service.AttrService;
+import com.rkyang.gulimall.product.vo.AttrGroupWithAttrsVO;
 import com.rkyang.gulimall.product.vo.AttrVO;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +37,9 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
     @Autowired
     private AttrDao attrDao;
+
+    @Autowired
+    private AttrService attrService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -103,5 +109,20 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
     @Transactional
     public void deleteRelation(AttrVO[] attrVOS) {
         attrgroupRelationDao.deleteRelation(Arrays.asList(attrVOS));
+    }
+
+    @Override
+    public List<AttrGroupWithAttrsVO> getAttrGroupWithAttrsByCatelogId(long catelogId) {
+        // 查询分组信息
+        List<AttrGroupEntity> attrGroupEntities = this.list(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelogId));
+        // 查询所有属性
+        List<AttrGroupWithAttrsVO> collect = attrGroupEntities.stream().map(o -> {
+            AttrGroupWithAttrsVO vo = new AttrGroupWithAttrsVO();
+            BeanUtils.copyProperties(o, vo);
+            List<AttrEntity> attrRelation = getAttrRelation(vo.getAttrGroupId());
+            vo.setAttrs(attrRelation);
+            return vo;
+        }).collect(Collectors.toList());
+        return collect;
     }
 }

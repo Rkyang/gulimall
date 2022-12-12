@@ -15,7 +15,9 @@ import com.rkyang.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service("categoryBrandRelationService")
@@ -45,5 +47,12 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         entity.setBrandName(brand.getName());
         entity.setCatelogName(category.getName());
         return super.save(entity);
+    }
+
+    @Override
+    public List<BrandEntity> getBrandsByCatId(long catId) {
+        List<CategoryBrandRelationEntity> catelogId = baseMapper.selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
+        List<BrandEntity> collect = catelogId.stream().map(o -> brandService.getById(o.getBrandId())).collect(Collectors.toList());
+        return collect;
     }
 }

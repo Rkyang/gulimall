@@ -8,6 +8,7 @@ import com.rkyang.gulimall.product.entity.AttrGroupEntity;
 import com.rkyang.gulimall.product.service.AttrAttrgroupRelationService;
 import com.rkyang.gulimall.product.service.AttrGroupService;
 import com.rkyang.gulimall.product.service.CategoryService;
+import com.rkyang.gulimall.product.vo.AttrGroupWithAttrsVO;
 import com.rkyang.gulimall.product.vo.AttrVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,15 @@ public class AttrGroupController {
         PageUtils page = attrGroupService.queryPage(params, cateId);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 获取分类下所有的分组以及分组中的规格参数（属性）
+     */
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId") long catelogId) {
+        List<AttrGroupWithAttrsVO> vos = attrGroupService.getAttrGroupWithAttrsByCatelogId(catelogId);
+        return R.ok().put("data", vos);
     }
 
 
