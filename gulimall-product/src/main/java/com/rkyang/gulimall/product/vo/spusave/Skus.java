@@ -2,6 +2,8 @@
   * Copyright 2022 json.cn 
   */
 package com.rkyang.gulimall.product.vo.spusave;
+
+import com.rkyang.common.to.MemberPrice;
 import lombok.Data;
 
 import java.math.BigDecimal;

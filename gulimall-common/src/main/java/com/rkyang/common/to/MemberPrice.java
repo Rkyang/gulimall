@@ -1,7 +1,7 @@
 /**
   * Copyright 2022 json.cn 
   */
-package com.rkyang.gulimall.product.vo.spusave;
+package com.rkyang.common.to;
 
 import lombok.Data;
 
