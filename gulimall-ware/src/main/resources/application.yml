@@ -18,3 +18,7 @@ mybatis-plus:
       id-type: auto
 server:
   port: 8085
+
+logging:
+  level:
+    com.rkyang.gulimall: debug

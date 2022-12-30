@@ -28,6 +28,14 @@ spring:
         filters:
           - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+#      仓库服务网关
+      - id: ware_route
+        uri: lb://gulimall-ware
+        predicates:
+          - Path=/api/ware/**
+        filters:
+          - RewritePath=/api/(?<segment>.*),/$\{segment}
+
 #       第三方服务网关
       - id: third_party_route
         uri: lb://gulimall-third-party
