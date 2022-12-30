@@ -1,6 +1,6 @@
 package com.rkyang.gulimall.product.controller;
 
-import com.rkyang.common.constant.product.AttrEnum;
+import com.rkyang.common.constant.ProductConstant;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
 import com.rkyang.gulimall.product.service.AttrService;
@@ -43,7 +43,7 @@ public class AttrController {
      */
     @GetMapping("/base/list/{catId}")
     public R baseList(@RequestParam Map<String, Object> params, @PathVariable("catId") Long catId) {
-        PageUtils page = attrService.queryPage(params, catId, AttrEnum.ATTR_TYPE_BASE.getCode());
+        PageUtils page = attrService.queryPage(params, catId, ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode());
 
         return R.ok().put("page", page);
     }
@@ -53,7 +53,7 @@ public class AttrController {
      */
     @GetMapping("/sale/list/{catId}")
     public R saleList(@RequestParam Map<String, Object> params, @PathVariable("catId") Long catId) {
-        PageUtils page = attrService.queryPage(params, catId, AttrEnum.ATTR_TYPE_SALE.getCode());
+        PageUtils page = attrService.queryPage(params, catId, ProductConstant.AttrEnum.ATTR_TYPE_SALE.getCode());
 
         return R.ok().put("page", page);
     }

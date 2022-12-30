@@ -3,7 +3,7 @@ package com.rkyang.gulimall.product.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.rkyang.common.constant.product.AttrEnum;
+import com.rkyang.common.constant.ProductConstant;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.Query;
 import com.rkyang.gulimall.product.dao.AttrAttrgroupRelationDao;
@@ -90,7 +90,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         // 获取未被关联的规格参数
         QueryWrapper<AttrEntity> wrapper = new QueryWrapper<AttrEntity>().
                 eq("catelog_id", catelogId).
-                eq("attr_type", AttrEnum.ATTR_TYPE_BASE.getCode());
+                eq("attr_type", ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode());
         if (!CollectionUtils.isEmpty(attrIdS)) {
             wrapper.notIn("attr_id", attrIdS);
         }

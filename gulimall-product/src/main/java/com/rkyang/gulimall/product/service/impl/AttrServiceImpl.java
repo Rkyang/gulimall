@@ -3,7 +3,7 @@ package com.rkyang.gulimall.product.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.rkyang.common.constant.product.AttrEnum;
+import com.rkyang.common.constant.ProductConstant;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.Query;
 import com.rkyang.common.utils.R;
@@ -79,7 +79,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
             AttrResponseVO attrResponseVO = new AttrResponseVO();
             BeanUtils.copyProperties(o, attrResponseVO);
             // 基本属性才有分组信息
-            if (code.equals(AttrEnum.ATTR_TYPE_BASE.getCode())) {
+            if (code.equals(ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode())) {
                 AttrAttrgroupRelationEntity attrgroupRelationEntity = attrgroupRelationDao.selectOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", o.getAttrId()));
                 if (attrgroupRelationEntity != null) {
                     AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(attrgroupRelationEntity.getAttrGroupId());
@@ -106,7 +106,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         BeanUtils.copyProperties(attr, attrEntity);
         this.save(attrEntity);
         // 保存商品属性和属性分组关联关系
-        if (attr.getAttrType().equals(AttrEnum.ATTR_TYPE_BASE.getCode())) {
+        if (attr.getAttrType().equals(ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode())) {
             AttrAttrgroupRelationEntity attrgroupRelationEntity = new AttrAttrgroupRelationEntity();
             attrgroupRelationEntity.setAttrGroupId(attr.getAttrGroupId());
             attrgroupRelationEntity.setAttrId(attrEntity.getAttrId());
@@ -139,7 +139,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         AttrEntity entity = new AttrEntity();
         BeanUtils.copyProperties(attr, entity);
         this.updateById(entity);
-        if (attr.getAttrType().equals(AttrEnum.ATTR_TYPE_BASE.getCode())) {
+        if (attr.getAttrType().equals(ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode())) {
             // 修改或新增分类分组关联关系
             AttrAttrgroupRelationEntity attrgroupRelation = attrgroupRelationDao.selectOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attr.getAttrId()));
             if (attrgroupRelation != null) {
