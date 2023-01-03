@@ -4,6 +4,7 @@ import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
 import com.rkyang.gulimall.ware.entity.PurchaseEntity;
 import com.rkyang.gulimall.ware.service.PurchaseService;
+import com.rkyang.gulimall.ware.vo.PurchaseDoneVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,16 @@ import java.util.Map;
 public class PurchaseController {
     @Autowired
     private PurchaseService purchaseService;
+
+    /**
+     * 完成采购
+     */
+    @PostMapping("/done")
+    public R done(@RequestBody PurchaseDoneVO purchaseDoneVO){
+        purchaseService.done(purchaseDoneVO);
+
+        return R.ok();
+    }
 
     /**
      * 领取采购单
