@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
@@ -27,16 +28,21 @@ public class PurchaseController {
     private PurchaseService purchaseService;
 
     /**
-     * 合并整单
-     * @param params
-     * @return
+     * 领取采购单
      */
-    @PostMapping("/merge")
-    //@RequiresPermissions("ware:purchase:list")
-    public R merge(@RequestBody Map<String, Object> params){
-        purchaseService.merge(params);
+    @PostMapping("/received")
+    public R received(@RequestBody List<Long> ids){
+        purchaseService.received(ids);
 
         return R.ok();
+    }
+
+    /**
+     * 合并整单
+     */
+    @PostMapping("/merge")
+    public R merge(@RequestBody Map<String, Object> params){
+        return purchaseService.merge(params);
     }
 
     /**

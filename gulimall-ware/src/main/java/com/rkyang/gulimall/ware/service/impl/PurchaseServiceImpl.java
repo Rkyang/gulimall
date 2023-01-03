@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rkyang.common.constant.WareConstant;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.Query;
+import com.rkyang.common.utils.R;
 import com.rkyang.gulimall.ware.dao.PurchaseDao;
 import com.rkyang.gulimall.ware.entity.PurchaseDetailEntity;
 import com.rkyang.gulimall.ware.entity.PurchaseEntity;
@@ -49,9 +50,16 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 
     @Override
     @Transactional
-    public void merge(Map<String, Object> params) {
+    public R merge(Map<String, Object> params) {
         Long purchaseId = params.get("purchaseId") == null ? null : Long.valueOf(params.get("purchaseId").toString());
         List<Integer> items = (List<Integer>) params.get("items");
+
+        for (Integer item : items) {
+            PurchaseDetailEntity byId = purchaseDetailService.getById(item);
+            if (byId.getStatus() >= WareConstant.PurchaseDetailStatusEnum.PURCHASEING.getCode()) {
+                return R.error("选中的采购需求中存在已领取的需求");
+            }
+        }
 
         if (purchaseId == null) {
             // 自动创建采购单
@@ -79,5 +87,36 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
         purchase.setId(finalPurchaseId);
         purchase.setUpdateTime(new Date());
         this.updateById(purchase);
+
+        return R.ok();
+    }
+
+    @Override
+    @Transactional
+    public void received(List<Long> ids) {
+        // 1、过滤掉状态是已分配的数据（正常是前端判断）
+        List<PurchaseEntity> purchaseEntityList = ids.stream().map(this::getById)
+                .filter(entity ->
+                    entity.getStatus().equals(WareConstant.PurchaseStatusEnum.CREATED.getCode()) ||
+                    entity.getStatus().equals(WareConstant.PurchaseStatusEnum.ASSIGNED.getCode()))
+                .peek(entity -> {
+                    entity.setStatus(WareConstant.PurchaseStatusEnum.RECEIVE.getCode());
+                    entity.setUpdateTime(new Date());
+                }).collect(Collectors.toList());
+
+        // 2、更新采购单状态
+        this.updateBatchById(purchaseEntityList);
+
+        // 3、更新采购需求状态
+        purchaseEntityList.forEach(item -> {
+            List<PurchaseDetailEntity> detailEntities = purchaseDetailService.list(new QueryWrapper<PurchaseDetailEntity>().eq("purchase_id", item.getId()));
+            List<PurchaseDetailEntity> collect = detailEntities.stream().map(detail -> {
+                PurchaseDetailEntity entity = new PurchaseDetailEntity();
+                entity.setId(detail.getId());
+                entity.setStatus(WareConstant.PurchaseDetailStatusEnum.PURCHASEING.getCode());
+                return entity;
+            }).collect(Collectors.toList());
+            purchaseDetailService.updateBatchById(collect);
+        });
     }
 }

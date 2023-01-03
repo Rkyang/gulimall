@@ -2,8 +2,10 @@ package com.rkyang.gulimall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rkyang.common.utils.PageUtils;
+import com.rkyang.common.utils.R;
 import com.rkyang.gulimall.ware.entity.PurchaseEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,6 +21,8 @@ public interface PurchaseService extends IService<PurchaseEntity> {
 
     PageUtils queryPageByUnReceive(Map<String, Object> params);
 
-    void merge(Map<String, Object> params);
+    R merge(Map<String, Object> params);
+
+    void received(List<Long> ids);
 }
 
