@@ -3,13 +3,16 @@ package com.rkyang.gulimall.product.controller;
 import com.rkyang.common.constant.ProductConstant;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
+import com.rkyang.gulimall.product.entity.ProductAttrValueEntity;
 import com.rkyang.gulimall.product.service.AttrService;
+import com.rkyang.gulimall.product.service.ProductAttrValueService;
 import com.rkyang.gulimall.product.vo.AttrResponseVO;
 import com.rkyang.gulimall.product.vo.AttrVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -26,6 +29,15 @@ import java.util.Map;
 public class AttrController {
     @Autowired
     private AttrService attrService;
+
+    @Autowired
+    private ProductAttrValueService attrValueService;
+
+    @RequestMapping("/base/listforspu/{spuId}")
+    public R listForSpu(@PathVariable("spuId") Long spuId) {
+        List<ProductAttrValueEntity> list = attrValueService.listForSpu(spuId);
+        return R.ok().put("data", list);
+    }
 
     /**
      * 列表
@@ -89,6 +101,13 @@ public class AttrController {
     public R update(@RequestBody AttrVO attr){
 		attrService.updateById(attr);
 
+        return R.ok();
+    }
+
+    @PostMapping("/update/{spuId}")
+    public R updateAttrSpu(@PathVariable("spuId") Long spuId,
+                           @RequestBody List<ProductAttrValueEntity> entities) {
+        attrService.updateAttrSpu(spuId, entities);
         return R.ok();
     }
 

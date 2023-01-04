@@ -11,12 +11,10 @@ import com.rkyang.gulimall.product.dao.AttrAttrgroupRelationDao;
 import com.rkyang.gulimall.product.dao.AttrDao;
 import com.rkyang.gulimall.product.dao.AttrGroupDao;
 import com.rkyang.gulimall.product.dao.CategoryDao;
-import com.rkyang.gulimall.product.entity.AttrAttrgroupRelationEntity;
-import com.rkyang.gulimall.product.entity.AttrEntity;
-import com.rkyang.gulimall.product.entity.AttrGroupEntity;
-import com.rkyang.gulimall.product.entity.CategoryEntity;
+import com.rkyang.gulimall.product.entity.*;
 import com.rkyang.gulimall.product.service.AttrService;
 import com.rkyang.gulimall.product.service.CategoryService;
+import com.rkyang.gulimall.product.service.ProductAttrValueService;
 import com.rkyang.gulimall.product.vo.AttrResponseVO;
 import com.rkyang.gulimall.product.vo.AttrVO;
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +42,9 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ProductAttrValueService attrValueService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -154,5 +155,16 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
                 attrgroupRelationDao.insert(attrgroupRelationEntity);
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void updateAttrSpu(Long spuId, List<ProductAttrValueEntity> entities) {
+        // 先删除之前的所有规格属性再重新插入
+        attrValueService.remove(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId));
+
+        List<ProductAttrValueEntity> collect = entities.stream().peek(item -> item.setSpuId(spuId)).collect(Collectors.toList());
+
+        attrValueService.saveBatch(collect);
     }
 }

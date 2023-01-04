@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.rkyang.common.utils.PageUtils;
 import com.rkyang.common.utils.R;
 import com.rkyang.gulimall.product.entity.AttrEntity;
+import com.rkyang.gulimall.product.entity.ProductAttrValueEntity;
 import com.rkyang.gulimall.product.vo.AttrResponseVO;
 import com.rkyang.gulimall.product.vo.AttrVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,5 +29,7 @@ public interface AttrService extends IService<AttrEntity> {
     AttrResponseVO getAttrInfo(Long attrId);
 
     void updateById(AttrVO attr);
+
+    void updateAttrSpu(Long spuId, List<ProductAttrValueEntity> entities);
 }
 
