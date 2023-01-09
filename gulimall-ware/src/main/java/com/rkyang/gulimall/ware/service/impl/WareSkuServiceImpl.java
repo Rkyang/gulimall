@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -72,6 +73,11 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         } else {
             wareSkuDao.updateStock(skuId, wareId, skuNum);
         }
+    }
+
+    @Override
+    public Map<String, Boolean> hasSkuStock(List<Long> skuId) {
+        return wareSkuDao.selectSkuHasStock(skuId);
     }
 
 }

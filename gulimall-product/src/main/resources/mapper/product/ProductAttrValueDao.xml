@@ -13,6 +13,14 @@
         <result property="attrSort" column="attr_sort"/>
         <result property="quickShow" column="quick_show"/>
     </resultMap>
+    <select id="selectSearchAttrBySpuId"
+            resultType="com.rkyang.gulimall.product.entity.ProductAttrValueEntity">
+        select av.attr_id, av.attr_name, av.attr_value
+        from pms_product_attr_value av
+                 left join pms_attr a
+                           on av.attr_id = a.attr_id
+        where a.search_type ='1' and av.spu_id = #{spuId}
+    </select>
 
 
 </mapper>

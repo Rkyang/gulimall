@@ -8,7 +8,8 @@ package com.rkyang.common.exception;
 public enum StatusCodeEnum {
 
     UNKNOW_EXPECTION(10000, "未知异常"),
-    VALID_EXPECTION(10001, "参数格式校验失败");
+    VALID_EXPECTION(10001, "参数格式校验失败"),
+    PRODUCT_UP_EXCEPTION(11000, "商品上架传输ES异常");
 
     private int code;
     private String message;
