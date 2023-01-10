@@ -1,5 +1,6 @@
 package com.rkyang.gulimall.product.service.impl;
 
+import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,15 +11,13 @@ import com.rkyang.gulimall.product.dao.CategoryDao;
 import com.rkyang.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.rkyang.gulimall.product.entity.CategoryEntity;
 import com.rkyang.gulimall.product.service.CategoryService;
+import com.rkyang.gulimall.product.vo.Catalog2VO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -102,5 +101,37 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             entity.setCatelogName(category.getName());
             categoryBrandRelationDao.update(entity, new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", category.getCatId()));
         }
+    }
+
+    @Override
+    public List<CategoryEntity> selectLevel1() {
+        return this.baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("cat_level", 1));
+    }
+
+    @Override
+    public Map<String, List<Catalog2VO>> getCatalog2And3() {
+        Map<String, List<Catalog2VO>> result = new HashMap<>();
+
+        List<CategoryEntity> allCatalog = this.list();
+
+        List<CategoryEntity> level1 = allCatalog.stream().filter(catalog -> catalog.getCatLevel() == 1).collect(Collectors.toList());
+
+        for (CategoryEntity l1 : level1) {
+            List<CategoryEntity> child2 = this.getChild(l1, allCatalog);
+            List<Catalog2VO> l2VOS = new ArrayList<>();
+            if (CollectionUtils.isNotEmpty(child2)) {
+                l2VOS = child2.stream().map(l2 -> {
+                    Catalog2VO l2VO = new Catalog2VO(l1.getCatId().toString(), l2.getCatId().toString(), l2.getName(), null);
+                    List<CategoryEntity> child3 = this.getChild(l2, allCatalog);
+                    if (CollectionUtils.isNotEmpty(child3)) {
+                        List<Catalog2VO.Catalog3VO> l3VOS = child3.stream().map(l3 -> new Catalog2VO.Catalog3VO(l2.getCatId().toString(), l3.getCatId().toString(), l3.getName())).collect(Collectors.toList());
+                        l2VO.setCatalog3List(l3VOS);
+                    }
+                    return l2VO;
+                }).collect(Collectors.toList());
+            }
+            result.put(l1.getCatId().toString(), l2VOS);
+        }
+        return result;
     }
 }
