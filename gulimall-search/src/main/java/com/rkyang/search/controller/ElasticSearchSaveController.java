@@ -6,6 +6,7 @@ import com.rkyang.common.utils.R;
 import com.rkyang.search.service.ElasticSearchSaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class ElasticSearchSaveController {
     private ElasticSearchSaveService searchSaveService;
 
     @PostMapping("/product/up")
-    public R saveProductUp(List<SkuEsTO> skuEsTOS) {
+    public R saveProductUp(@RequestBody List<SkuEsTO> skuEsTOS) {
         boolean result = searchSaveService.saveProductUp(skuEsTOS);
         if (!result) {
             return R.error(StatusCodeEnum.PRODUCT_UP_EXCEPTION.getCode(), StatusCodeEnum.PRODUCT_UP_EXCEPTION.getMessage());

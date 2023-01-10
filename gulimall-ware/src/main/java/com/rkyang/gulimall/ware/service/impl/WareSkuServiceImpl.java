@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -76,8 +77,16 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
     }
 
     @Override
-    public Map<String, Boolean> hasSkuStock(List<Long> skuId) {
-        return wareSkuDao.selectSkuHasStock(skuId);
+    public Map<Long, Boolean> hasSkuStock(List<Long> skuId) {
+        Map<Long, Object> maps = wareSkuDao.selectSkuHasStock(skuId);
+        Map<Long, Boolean> result = new HashMap<>();
+
+        for (Long key : maps.keySet()) {
+            Map<String, String> temp = (Map<String, String>) maps.get(key);
+            result.put(key, Boolean.valueOf(temp.get("stock")));
+        }
+
+        return result;
     }
 
 }

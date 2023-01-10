@@ -3,6 +3,7 @@ package com.rkyang.search.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.rkyang.common.to.es.SkuEsTO;
 import com.rkyang.search.config.GuliMallElasticSearchConfig;
+import com.rkyang.search.constant.ElasticSearchConstant;
 import com.rkyang.search.service.ElasticSearchSaveService;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.bulk.BulkItemResponse;
@@ -34,7 +35,7 @@ public class ElasticSearchSaveServiceImpl implements ElasticSearchSaveService {
         BulkRequest bulkRequest = new BulkRequest();
 
         for (SkuEsTO esTO : skuEsTOS) {
-            IndexRequest indexRequest = new IndexRequest();
+            IndexRequest indexRequest = new IndexRequest(ElasticSearchConstant.PRODUCT_INDEX);
             indexRequest.id(esTO.getSkuId().toString());
             String esTOJson = JSON.toJSONString(esTO);
             indexRequest.source(esTOJson, XContentType.JSON);

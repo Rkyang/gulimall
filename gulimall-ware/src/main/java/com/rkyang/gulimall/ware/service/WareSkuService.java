@@ -20,6 +20,6 @@ public interface WareSkuService extends IService<WareSkuEntity> {
 
     void addStock(Long skuId, Long wareId, Integer skuNum);
 
-    Map<String, Boolean> hasSkuStock(List<Long> skuId);
+    Map<Long, Boolean> hasSkuStock(List<Long> skuId);
 }
 

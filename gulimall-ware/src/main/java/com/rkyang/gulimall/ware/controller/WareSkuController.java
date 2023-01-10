@@ -31,7 +31,7 @@ public class WareSkuController {
      */
     @PostMapping("/hasSkuStock")
     public R hasSkuStock(@RequestBody List<Long> skuId) {
-        Map<String, Boolean> result = wareSkuService.hasSkuStock(skuId);
+        Map<Long, Boolean> result = wareSkuService.hasSkuStock(skuId);
         return R.ok().put("data", result);
     }
 

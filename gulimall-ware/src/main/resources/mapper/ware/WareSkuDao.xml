@@ -22,7 +22,7 @@
     <select id="selectSkuHasStock" resultType="java.util.Map">
         select
                sku_id skuId,
-               if(sum(ifnull(stock, 0) - ifnull(stock_locked, 0)) > 0, true, false) stock
+               if(sum(ifnull(stock, 0) - ifnull(stock_locked, 0)) > 0, 'true', 'false') stock
         from wms_ware_sku where sku_id in
         <foreach collection="skuId" item="id" separator="," open="(" close=")">
             #{id}

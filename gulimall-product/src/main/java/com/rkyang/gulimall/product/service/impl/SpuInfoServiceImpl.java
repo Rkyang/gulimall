@@ -130,16 +130,16 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         }).collect(Collectors.toList());
 
         List<Long> skuIdList = skuList.stream().map(SkuInfoEntity::getSkuId).collect(Collectors.toList());
-        Map<String, Boolean> hasStockMap = new HashMap<>();
+        Map<Long, Boolean> hasStockMap = new HashMap<>();
         try {
             R r = wareFeignService.hasSkuStock(skuIdList);
-            hasStockMap = (Map<String, Boolean>) r.get("data");
+            hasStockMap = (Map<Long, Boolean>) r.get("data");
         } catch (Exception e) {
             log.error("远程调用库存服务查询sku是否有库存出现异常：{}", e);
             e.printStackTrace();
         }
 
-        Map<String, Boolean> finalHasStockMap = hasStockMap;
+        Map<Long, Boolean> finalHasStockMap = hasStockMap;
         List<SkuEsTO> skuEsTOList = skuList.stream().map(sku -> {
             SkuEsTO esTO = new SkuEsTO();
             BeanUtils.copyProperties(sku, esTO);
